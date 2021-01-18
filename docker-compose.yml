@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  sqlserver:
+    image: "mcr.microsoft.com/mssql/server"
+    user: '0:0'
+    container_name: sqlserver
+    ports:
+      - 1433:1433
+    env_file:
+      - database.env
+    volumes:
+      - ~/docker/sqlserver-data:/var/opt/mssql
+      - ./sql:/sql
+    command:
+      - /bin/bash
+      - -c 
+      - |
+        # Launch MSSQL and send to background
+        /opt/mssql/bin/sqlservr &
+        # Wait 30 seconds for it to be available
+        sleep 30
+        # Run the sql to create data
+        /opt/mssql-tools/bin/sqlcmd -U sa -P $$SA_PASSWORD -l 30 -e -i sql/create_data.sql
+        # So that the container doesn't shut down, sleep this thread
+        printf '=%.0s' {1..100}
+        echo "The database is ready :) go ahead"
+        sleep infinity
