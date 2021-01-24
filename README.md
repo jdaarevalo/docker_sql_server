@@ -1,6 +1,6 @@
 # Create Tables and data in SQL Server
 
-This project create tables and data in a sql server database.
+This project create tables and data in a sql server database. The tables and data that create are in sql/create_data.sql
 ## database.env
 Set the environment variables like:
 | Parameter | Description |
